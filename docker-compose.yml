@@ -27,7 +27,7 @@ services:
     # Variables de entorno para crear la base de datos al iniciar
     environment:
       - MYSQL_ROOT_PASSWORD=12345 # contraseña del root
-      - MYSQL_DATABASE=users_db # nombre de la BD que se creará
+      - MYSQL_DATABASE=mastercook_db # nombre de la BD que se creará
     # Expone el puerto 3306 de MySQL para conexión externa (opcional en este caso)
     ports:
       - "3306:3306"

@@ -19,14 +19,16 @@ def login():
         host="db",
         user="root",
         password="12345",
-        database="users_db"
+        database="mastercook_db"
     )
     # Crea un cursor que devuelve resultados como diccionarios
     cursor = db.cursor(dictionary=True)
     # Ejecuta una consulta SQL para buscar un usuario con ese username y password
-    cursor.execute("SELECT * FROM users WHERE username=%s AND password=%s", (username, password))
+    cursor.execute("SELECT * FROM USUARIO WHERE nombre_usuario=%s AND contrasena=%s", (username, password))
     # Obtiene el primer resultado (si existe)
     user = cursor.fetchone()
+    cursor.close()
+    db.close()  
     # Si encontró un usuario, devuelve mensaje exitoso
     if user:
         return jsonify({"message": "Login exitoso"})
