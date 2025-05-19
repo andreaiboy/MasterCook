@@ -36,6 +36,6 @@ def login():
     # Si no lo encontró, devuelve error 401 (no autorizado)
         return jsonify({"message": "Credenciales incorrectas"}), 401
     # Hace que la app se ejecute cuando este archivo se ejecuta directamente
-if __name__ == '_main_':
+if __name__ == '__main__':
 # Ejecuta el servidor Flask accesible desde cualquier IP (útil en Docker)
     app.run(host='0.0.0.0', port=5000)

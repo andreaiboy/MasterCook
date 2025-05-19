@@ -30,7 +30,7 @@ services:
       - MYSQL_DATABASE=mastercook_db # nombre de la BD que se creará
     # Expone el puerto 3306 de MySQL para conexión externa (opcional en este caso)
     ports:
-      - "3306:3306"
+      - "3307:3306"
     # Monta un volumen para ejecutar automáticamente scripts de inicialización
     volumes:
       - ./mysql-init:/docker-entrypoint-initdb.d
@@ -44,3 +44,5 @@ services:
     # Se asegura de que el backend esté corriendo antes de iniciar este servicio
     depends_on:
       - backend
+    environment:
+      - REACT_APP_API_URL=http://backend:5000  
