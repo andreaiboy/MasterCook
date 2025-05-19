@@ -17,7 +17,7 @@ services:
       - MYSQL_HOST=db # nombre del contenedor de la BD
       - MYSQL_USER=root
       - MYSQL_PASSWORD=12345
-      - MYSQL_DATABASE=users_db
+      - MYSQL_DATABASE=mastercook_db
     # Servicio: base de datos MySQL
   db:
     # Utiliza la imagen oficial de MySQL 8.0
