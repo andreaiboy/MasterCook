@@ -9,7 +9,8 @@ const Navegar = () => {
   const navigate = useNavigate();
   const [talleres, setTalleres] = useState([]);
   const [categorias, setCategorias] = useState([]);
-  const [filtro, setFiltro] = useState("");
+  const [filtroCategoria, setFiltroCategoria] = useState("");
+  const [filtroOrden, setFiltroOrden] = useState("");
   const [cargando, setCargando] = useState(true);
   const [tallerExpandido, setTallerExpandido] = useState(null);
 
@@ -19,7 +20,7 @@ const Navegar = () => {
         {
           id: 1,
           nombre: "Cocina Italiana",
-          descripcion: "Aprende las técnicas tradicionales de pasta y salsas",
+          descripcion: "Aprende las técnicas tradicionales de pasta y salsas.",
           categoria: "Internacional",
           fecha: "15/10/2023",
           precio: 120,
@@ -30,7 +31,7 @@ const Navegar = () => {
         {
           id: 2,
           nombre: "Repostería Francesa",
-          descripcion: "Domina los clásicos de la pastelería francesa",
+          descripcion: "Domina los clásicos de la pastelería francesa.",
           categoria: "Repostería",
           fecha: "20/10/2023",
           precio: 150,
@@ -41,12 +42,45 @@ const Navegar = () => {
         {
           id: 3,
           nombre: "Cocina Asiática",
-          descripcion: "Técnicas auténticas de cocina tailandesa y japonesa",
+          descripcion: "Técnicas auténticas de cocina tailandesa y japonesa.",
           categoria: "Internacional",
           fecha: "25/10/2023",
           precio: 135,
           cupos_disponibles: 8,
           cupos_totales: 12,
+          imagen: ComidaAsiatica
+        },
+        {
+          id: 4,
+          nombre: "Cocina Italiana",
+          descripcion: "Aprende las técnicas tradicionales de pasta y salsas.",
+          categoria: "Internacional",
+          fecha: "30/10/2023",
+          precio: 110,
+          cupos_disponibles: 7,
+          cupos_totales: 12,
+          imagen: ComidaItaliana
+        },
+        {
+          id: 5,
+          nombre: "Repostería Francesa",
+          descripcion: "Domina los clásicos de la pastelería francesa.",
+          categoria: "Repostería",
+          fecha: "05/11/2023",
+          precio: 140,
+          cupos_disponibles: 3,
+          cupos_totales: 10,
+          imagen: ReposFrancesa
+        },
+        {
+          id: 6,
+          nombre: "Cocina Asiática",
+          descripcion: "Técnicas auténticas de cocina tailandesa y japonesa.",
+          categoria: "Internacional",
+          fecha: "10/11/2023",
+          precio: 125,
+          cupos_disponibles: 9,
+          cupos_totales: 15,
           imagen: ComidaAsiatica
         }
       ];
@@ -57,12 +91,35 @@ const Navegar = () => {
     }, 1000);
   }, []);
 
-  const talleresFiltrados = filtro
-    ? talleres.filter(taller => taller.categoria === filtro)
+  const talleresFiltrados = filtroCategoria
+    ? talleres.filter(taller => taller.categoria === filtroCategoria)
     : talleres;
+
+  const ordenarTalleres = (talleres) => {
+    const talleresOrdenados = [...talleres];
+    
+    switch(filtroOrden) {
+      case "az":
+        return talleresOrdenados.sort((a, b) => a.nombre.localeCompare(b.nombre));
+      case "za":
+        return talleresOrdenados.sort((a, b) => b.nombre.localeCompare(a.nombre));
+      case "precio-asc":
+        return talleresOrdenados.sort((a, b) => a.precio - b.precio);
+      case "precio-desc":
+        return talleresOrdenados.sort((a, b) => b.precio - a.precio);
+      default:
+        return talleresOrdenados;
+    }
+  };
+
+  const talleresOrdenados = ordenarTalleres(talleresFiltrados);
 
   const handleToggleInfo = (id) => {
     setTallerExpandido(tallerExpandido === id ? null : id);
+  };
+
+  const handleReservar = (tallerId) => {
+    navigate(`/reservartaller/${tallerId}`);
   };
 
   const styles = {
@@ -98,64 +155,116 @@ const Navegar = () => {
     },
     content: {
       padding: "20px",
-      maxWidth: "1000px",
+      width: "100%",
+      maxWidth: "1200px",
       margin: "0 auto",
       flex: 1
+    },
+    filtersContainer: {
+      display: 'flex',
+      gap: '20px',
+      marginBottom: '20px',
+      flexWrap: 'wrap',
+      justifyContent: 'center'
+    },
+    select: {
+      padding: "10px",
+      borderRadius: "10px",
+      border: "1px solid #ccc",
+      fontSize: "14px",
+      width: "100%",
+      maxWidth: "300px",
+      backgroundColor: "#FFF",
+      cursor: "pointer"
+    },
+    gridContainer: {
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+      gap: "20px",
+      padding: "10px"
     },
     card: {
       backgroundColor: "#FFF",
       borderRadius: "10px",
       boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-      marginBottom: "20px",
       overflow: "hidden",
       display: "flex",
-      alignItems: "center",
-      padding: "15px"
+      flexDirection: "column",
+      padding: "15px",
+      height: "auto",
+      minHeight: "300px",
+      transition: "transform 0.3s",
+      ':hover': {
+        transform: "translateY(-5px)"
+      }
     },
     image: {
-      width: "100px",
-      height: "100px",
+      width: "100%",
+      height: "150px",
       objectFit: "cover",
-      borderRadius: "10px",
-      marginRight: "15px"
+      borderRadius: "8px",
+      marginBottom: "10px"
     },
     tallerInfo: {
-      flex: 1
+      flex: 1,
+      display: "flex",
+      flexDirection: "column"
     },
     infoText: {
       fontSize: "14px",
       color: "#333",
       margin: "4px 0"
     },
+    buttonsContainer: {
+      display: "flex",
+      gap: "10px",
+      marginTop: "10px"
+    },
     infoButton: {
       backgroundColor: "#6B8E23",
       color: "#fff",
       border: "none",
       borderRadius: "8px",
-      padding: "6px 12px",
+      padding: "8px 12px",
       cursor: "pointer",
       fontWeight: "bold",
-      fontSize: "13px"
+      fontSize: "13px",
+      flex: 1,
+      transition: "all 0.3s",
+      ':hover': {
+        backgroundColor: "#5a7a1d"
+      }
+    },
+    reservaButton: {
+      backgroundColor: "#D94F4F",
+      color: "#fff",
+      border: "none",
+      borderRadius: "8px",
+      padding: "8px 12px",
+      cursor: "pointer",
+      fontWeight: "bold",
+      fontSize: "13px",
+      flex: 1,
+      transition: "all 0.3s",
+      ':hover': {
+        backgroundColor: "#c03e3e"
+      }
     },
     descripcion: {
       marginTop: "10px",
       fontSize: "14px",
-      color: "#444"
+      color: "#444",
+      padding: "5px 0"
     },
-    select: {
-      padding: "10px",
-      borderRadius: "10px",
-      border: "1px solid #ccc",
-      marginBottom: "20px",
-      fontSize: "14px",
-      width: "100%",
-      maxWidth: "300px"
+    loading: {
+      textAlign: "center",
+      padding: "20px",
+      color: "#555"
     }
   };
 
   return (
     <div style={styles.mainContainer}>
-      {/* Menú de navegación actualizado */}
       <nav style={styles.nav}>
         <button 
           style={styles.navButton}
@@ -244,52 +353,85 @@ const Navegar = () => {
       </nav>
 
       <div style={styles.content}>
-        <select
-          value={filtro}
-          onChange={(e) => setFiltro(e.target.value)}
-          style={styles.select}
-        >
-          <option value="">Todas las categorías</option>
-          {categorias.map((categoria, idx) => (
-            <option key={idx} value={categoria}>{categoria}</option>
-          ))}
-        </select>
+        <div style={styles.filtersContainer}>
+          <select
+            value={filtroCategoria}
+            onChange={(e) => setFiltroCategoria(e.target.value)}
+            style={styles.select}
+          >
+            <option value="">Todas las categorías</option>
+            {categorias.map((categoria, idx) => (
+              <option key={idx} value={categoria}>{categoria}</option>
+            ))}
+          </select>
+
+          <select
+            value={filtroOrden}
+            onChange={(e) => setFiltroOrden(e.target.value)}
+            style={styles.select}
+          >
+            <option value="">Orden por defecto</option>
+            <option value="az">Ordenar A-Z</option>
+            <option value="za">Ordenar Z-A</option>
+            <option value="precio-asc">Precio: Bajo a Alto</option>
+            <option value="precio-desc">Precio: Alto a Bajo</option>
+          </select>
+        </div>
 
         {cargando ? (
-          <p>Cargando talleres...</p>
+          <p style={styles.loading}>Cargando talleres...</p>
         ) : (
-          talleresFiltrados.map((taller) => (
-            <div key={taller.id} style={styles.card}>
-              <img src={taller.imagen} alt={taller.nombre} style={styles.image} />
-              <div style={styles.tallerInfo}>
-                <p style={styles.infoText}><strong>{taller.nombre}</strong></p>
-                <p style={styles.infoText}>Categoría: {taller.categoria}</p>
-                <p style={styles.infoText}>Fecha: {taller.fecha}</p>
-                <p style={styles.infoText}>Precio: ${taller.precio}</p>
-                <p style={styles.infoText}>Cupos: {taller.cupos_disponibles}/{taller.cupos_totales}</p>
+          <div style={styles.gridContainer}>
+            {talleresOrdenados.map((taller) => (
+              <motion.div 
+                key={taller.id} 
+                style={styles.card}
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <img src={taller.imagen} alt={taller.nombre} style={styles.image} />
+                <div style={styles.tallerInfo}>
+                  <p style={styles.infoText}><strong>{taller.nombre}</strong></p>
+                  <p style={styles.infoText}>Categoría: {taller.categoria}</p>
+                  <p style={styles.infoText}>Fecha: {taller.fecha}</p>
+                  <p style={styles.infoText}>Precio: ${taller.precio}</p>
+                  <p style={styles.infoText}>Cupos: {taller.cupos_disponibles}/{taller.cupos_totales}</p>
 
-                <button
-                  style={styles.infoButton}
-                  onClick={() => handleToggleInfo(taller.id)}
-                >
-                  {tallerExpandido === taller.id ? 'Ocultar' : '+ Info'}
-                </button>
-
-                <AnimatePresence>
-                  {tallerExpandido === taller.id && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.3 }}
+                  <div style={styles.buttonsContainer}>
+                    <button
+                      style={styles.infoButton}
+                      onClick={() => handleToggleInfo(taller.id)}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = "#5a7a1d"}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = "#6B8E23"}
                     >
-                      <p style={styles.descripcion}>{taller.descripcion}</p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-          ))
+                      {tallerExpandido === taller.id ? 'Ocultar' : '+ Info'}
+                    </button>
+                    <button
+                      style={styles.reservaButton}
+                      onClick={() => navigate('/reservartaller')}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = "#c03e3e"}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = "#D94F4F"}
+                    >
+                      Buscar
+                    </button>
+                  </div>
+
+                  <AnimatePresence>
+                    {tallerExpandido === taller.id && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <p style={styles.descripcion}>{taller.descripcion}</p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         )}
       </div>
     </div>

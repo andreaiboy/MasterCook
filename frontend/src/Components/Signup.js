@@ -5,6 +5,7 @@ import imagenLateral from "./Logo.png";
 const Formulario = () => {
   const [formData, setFormData] = useState({
     nombre: "",
+    usuario: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -24,6 +25,7 @@ const Formulario = () => {
     let newErrors = {};
 
     if (!formData.nombre.trim()) newErrors.nombre = "Campo requerido";
+    if (!formData.usuario.trim()) newErrors.usuario = "Campo Requerido";
     if (!formData.email.includes("@")) newErrors.email = "Email inválido";
     if (formData.password.length < 6) newErrors.password = "Mínimo 6 caracteres";
     if (formData.password !== formData.confirmPassword)
@@ -39,6 +41,7 @@ const Formulario = () => {
       alert("Formulario enviado");
       setFormData({
         nombre: "",
+        usuario: "",
         email: "",
         password: "",
         confirmPassword: "",
@@ -187,6 +190,25 @@ const Formulario = () => {
               placeholder="Ej: Juan Pérez"
             />
             {errors.nombre && <div style={styles.errorText}>{errors.nombre}</div>}
+          </div>
+
+          <div style={{marginBottom: "20px"}}>
+            <label style={styles.label}>Usuario</label>
+            <input
+              type="text"
+              name="nombre"
+              value={formData.nombre}
+              onChange={handleChange}
+              onFocus={() => setFocusedField("nombre")}
+              onBlur={() => setFocusedField("")}
+              style={{
+                ...styles.input,
+                ...(errors.nombre && styles.inputError),
+                ...(focusedField === "nombre" && styles.inputFocus),
+              }}
+              placeholder="Ej: juan_.perez"
+              />
+              {errors.nombre && <div style = {styles.errorText}>{errors.nombre}</div>}
           </div>
 
           <div style={{ marginBottom: "20px" }}>

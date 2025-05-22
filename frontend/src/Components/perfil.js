@@ -6,6 +6,7 @@ const Perfil = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState({
     nombre: "Andrea Giboy",
+    usuario: "andrea_.iboy",
     correo: "andreagiboy@gmail.com",
     taller: "Cocina Italiana Avanzada"
   });
@@ -20,7 +21,6 @@ const Perfil = () => {
 
   const handleSave = () => {
     setIsEditing(false);
-    // Aquí podrías agregar lógica para guardar los datos
     alert("Datos guardados correctamente");
   };
 
@@ -29,17 +29,16 @@ const Perfil = () => {
     setUserData({ ...userData, [name]: value });
   };
 
-  // Estilos con la paleta de colores proporcionada
   const styles = {
     mainContainer: {
       minHeight: "100vh",
-      backgroundColor: "#FAFAFA", // Fondo Claro: Snow White
+      backgroundColor: "#FAFAFA", 
       fontFamily: "'Century Gothic', Arial, sans-serif",
       display: "flex",
       flexDirection: "column"
     },
     nav: {
-      backgroundColor: "#D94F4F", // Primario: Salsa Tomato
+      backgroundColor: "#D94F4F", 
       padding: "15px 0",
       display: "flex",
       justifyContent: "center",
@@ -49,7 +48,7 @@ const Perfil = () => {
       zIndex: 100
     },
     navButton: {
-      color: "#FFF3E2", // Secundario: Creamy Vanilla
+      color: "#FFF3E2", 
       background: "none",
       border: "none",
       fontWeight: "600",
@@ -75,10 +74,10 @@ const Perfil = () => {
       width: "100%",
       maxWidth: "500px",
       boxShadow: "0 4px 15px rgba(0,0,0,0.08)",
-      border: "2px solid #6B8E23" // Acento: Olive Green
+      border: "2px solid #6B8E23"
     },
     title: {
-      color: "#D94F4F", // Primario: Salsa Tomato
+      color: "#D94F4F", 
       textAlign: "center",
       marginBottom: "30px",
       fontSize: "28px",
@@ -91,17 +90,17 @@ const Perfil = () => {
     label: {
       display: "block",
       marginBottom: "8px",
-      color: "#333333", // Texto Principal: Charcoal Gray
+      color: "#333333", 
       fontWeight: "600",
       fontSize: "16px"
     },
     input: {
       width: "100%",
       padding: "12px 15px",
-      border: `1px solid ${isEditing ? "#6B8E23" : "#DDD"}`, // Acento: Olive Green cuando edita
+      border: `1px solid ${isEditing ? "#6B8E23" : "#DDD"}`, 
       borderRadius: "8px",
-      backgroundColor: isEditing ? "#FAFAFA" : "#FFF", // Fondo Claro: Snow White
-      color: "#333333", // Texto Principal
+      backgroundColor: isEditing ? "#FAFAFA" : "#FFF", 
+      color: "#333333", 
       fontSize: "16px",
       transition: "all 0.3s",
       pointerEvents: isEditing ? "auto" : "none"
@@ -123,12 +122,12 @@ const Perfil = () => {
       textTransform: "uppercase"
     },
     editButton: {
-      backgroundColor: "#6B8E23", // Acento: Olive Green
+      backgroundColor: "#6B8E23", 
       color: "white"
     },
     saveButton: {
-      backgroundColor: "#D94F4F", // Primario: Salsa Tomato
-      color: "#FFF3E2" // Secundario: Creamy Vanilla
+      backgroundColor: "#D94F4F", 
+      color: "#FFF3E2" 
     },
     buttonHover: {
       transform: "translateY(-2px)",
@@ -199,16 +198,28 @@ const Perfil = () => {
         <button 
           style={styles.navButton}
           onClick={() => handleNavigation('/pago')}
-          onMouseEnter={(e) => e.target.style.backgroundColor = '#FAFAFA'}
-          onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = "#FFF3E2";
+            e.target.style.color = "#D94F4F";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = "transparent";
+            e.target.style.color = "#FFF3E2";
+          }}
         >
           Pago
         </button>
-         <button 
+        <button 
           style={styles.navButton}
           onClick={() => handleNavigation('/')}
-          onMouseEnter={(e) => e.target.style.backgroundColor = '#FAFAFA'}
-          onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = "#FFF3E2";
+            e.target.style.color = "#D94F4F";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = "transparent";
+            e.target.style.color = "#FFF3E2";
+          }}
         >
           Cerrar Sesión
         </button>
@@ -225,6 +236,17 @@ const Perfil = () => {
               type="text"
               name="nombre"
               value={userData.nombre}
+              onChange={handleChange}
+              style={styles.input}
+            />
+          </div>
+
+          <div style={styles.fieldContainer}>
+            <label style={styles.label}>Usuario:</label>
+            <input
+              type="text"
+              name="usuario"
+              value={userData.usuario}
               onChange={handleChange}
               style={styles.input}
             />
@@ -257,7 +279,7 @@ const Perfil = () => {
               <button
                 style={{ ...styles.button, ...styles.editButton }}
                 onClick={handleEdit}
-                onMouseEnter={(e) => e.target.style.transform = styles.buttonHover.transform}
+                onMouseEnter={(e) => e.target.style.transform = "translateY(-2px)"}
                 onMouseLeave={(e) => e.target.style.transform = "none"}
               >
                 Editar
@@ -266,7 +288,7 @@ const Perfil = () => {
               <button
                 style={{ ...styles.button, ...styles.saveButton }}
                 onClick={handleSave}
-                onMouseEnter={(e) => e.target.style.transform = styles.buttonHover.transform}
+                onMouseEnter={(e) => e.target.style.transform = "translateY(-2px)"}
                 onMouseLeave={(e) => e.target.style.transform = "none"}
               >
                 Guardar Datos
