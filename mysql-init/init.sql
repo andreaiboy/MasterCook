@@ -78,6 +78,16 @@ CREATE TABLE IF NOT EXISTS Reservacion (
   UNIQUE KEY uk_usuario_curso (id_usuario, id_curso)
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS PAGOS (
+  id_pago INT AUTO_INCREMENT PRIMARY KEY,
+  id_reserva INT UNIQUE,
+  monto DECIMAL(10,2),
+  fecha_pago TIMESTAMP,
+  metodo_pago VARCHAR(20),
+  CONSTRAINT fk_pago_reserva 
+      FOREIGN KEY (id_reserva) 
+      REFERENCES Reservacion(id_reserva)
+);
 
 
 
