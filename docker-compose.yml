@@ -21,7 +21,7 @@ services:
    # Servicio: backend (Flask)
   pagos:
     # Construye la imagen Docker desde la carpeta ./backend (donde está el Dockerfile)
-    build: ./backend/Pagos
+    build: ./backend/pagos
     # Expone el puerto 5000 del contenedor en el puerto 5000 del host
     ports:
       - "5002:5000"
@@ -36,9 +36,9 @@ services:
       - MYSQL_DATABASE=mastercook_db
     # Servicio: base de datos MySQL
    # Servicio: backend (Flask)
-  Reservas:
+  reservas:
     # Construye la imagen Docker desde la carpeta ./backend (donde está el Dockerfile)
-    build: ./backend/Reservas
+    build: ./backend/reservas
     # Expone el puerto 5000 del contenedor en el puerto 5000 del host
     ports:
       - "5003:5000"
@@ -52,7 +52,7 @@ services:
       - MYSQL_PASSWORD=12345
       - MYSQL_DATABASE=mastercook_db
    # Servicio: backend (Flask)
-  Talleres:
+  talleres:
     # Construye la imagen Docker desde la carpeta ./backend (donde está el Dockerfile)
     build: ./backend/talleres
     # Expone el puerto 5000 del contenedor en el puerto 5000 del host
@@ -91,6 +91,9 @@ services:
       - "3000:3000"
     # Se asegura de que el backend esté corriendo antes de iniciar este servicio
     depends_on:
-      - backend
+      - auth
+      - pagos
+      - reservas
+      - talleres
     environment:
       - REACT_APP_API_URL=http://backend:5000  
