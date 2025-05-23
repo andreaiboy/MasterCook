@@ -33,6 +33,7 @@ def login():
     db.close()  
     # Si encontró un usuario, devuelve mensaje exitoso
     if user:
+        session['id_usuario'] = user['id_usuario']
         return jsonify({"message": "Login exitoso"})
     else:
     # Si no lo encontró, devuelve error 401 (no autorizado)

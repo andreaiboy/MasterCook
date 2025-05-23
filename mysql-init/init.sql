@@ -112,15 +112,15 @@ INSERT INTO CURSOS (nombre, id_categoria, fecha, precio, cupo, imagen_url, descr
 
 -- Insertar estados de reserva
 INSERT INTO ESTADOS_RESERVA (nombre) VALUES 
-  ('Pendiente'), ('Confirmada'), ('Cancelada'), ('Completada');
+  ('Pendiente'), ('Pagada'), ('Cancelada');
 
 -- Insertar reservaciones
 INSERT INTO Reservacion (id_usuario, id_curso, id_estado, pagado, metodo_pago, codigo_confirmacion) VALUES
   (1, 1, 2, TRUE, 'Tarjeta', 'ABC123'),
-  (2, 1, 1, FALSE, NULL, 'XYZ789'),
+  (2, 1, 2, FALSE, NULL, 'XYZ789'),
   (3, 2, 2, TRUE, 'Transferencia', 'PQR456'),
   (4, 3, 3, FALSE, NULL, 'LMN321'),
-  (5, 4, 4, TRUE, 'Tarjeta', 'JKL999');
+  (5, 4, 2, TRUE, 'Tarjeta', 'JKL999');
 
 -- Insertar pagos
 INSERT INTO PAGOS (id_reserva, monto, fecha_pago, metodo_pago) VALUES

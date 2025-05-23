@@ -1,60 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const VerReservas = () => {
   const navigate = useNavigate();
+  const [reservas, setReservas] = useState([]);
   const [filtro, setFiltro] = useState('todas');
   const [busqueda, setBusqueda] = useState('');
   const [reservaSeleccionada, setReservaSeleccionada] = useState(null);
 
-  // Datos de ejemplo de reservas con todos los campos requeridos
-  const [reservas, setReservas] = useState([
-    {
-      id: 1,
-      taller: "Cocina Italiana",
-      fecha: "2023-11-15",
-      hora: "10:00 - 12:00",
-      instructor: "Chef Marco",
-      estadoPago: "Pagado",
-      estadoReserva: "Completada",
-      descripcion: "Aprende a hacer pasta fresca y auténticas salsas italianas.",
-      ubicacion: "Cocina Principal - Edificio A"
-    },
-    {
-      id: 2,
-      taller: "Repostería Francesa",
-      fecha: "2023-12-20",
-      hora: "16:00 - 18:00",
-      instructor: "Chef Sophie",
-      estadoPago: "Pendiente",
-      estadoReserva: "Confirmada",
-      descripcion: "Masterclass en la preparación de macarons y éclairs.",
-      ubicacion: "Laboratorio de Repostería"
-    },
-    {
-      id: 3,
-      taller: "Cocina Asiática",
-      fecha: new Date().toISOString().split('T')[0], // Hoy
-      hora: "18:00 - 20:00",
-      instructor: "Chef Li",
-      estadoPago: "Pagado",
-      estadoReserva: "Confirmada",
-      descripcion: "Técnicas de cocción al wok y preparación de sushi.",
-      ubicacion: "Cocina Oriental - Edificio B"
-    },
-    {
-      id: 4,
-      taller: "Panadería Artesanal",
-      fecha: "2024-01-10",
-      hora: "09:00 - 12:00",
-      instructor: "Chef Antonio",
-      estadoPago: "Pagado",
-      estadoReserva: "Cancelada",
-      descripcion: "Elaboración de panes con fermentación natural.",
-      ubicacion: "Horno de Leña - Edificio C"
-    }
-  ]);
+  // Reemplaza con tu URL real del backend
+  const BASE_URL = 'http://localhost:5000';
 
+  // Obtener el id_usuario desde localStorage
+  const user = JSON.parse(localStorage.getItem('user'));
+  const id_usuario = user?.id_usuario;
+
+  useEffect(() => {
+    if (!id_usuario) {
+      navigate('/login');
+      return;
+    }
+
+    axios.get(`${BASE_URL}/reservas/${id_usuario}`)
+      .then(response => {
+        const datos = response.data.reservas.map(r => ({
+          id: r.id_reserva,
+          taller: r.curso,
+          fecha: r.fecha,
+          hora: 'Horario no disponible', // puedes agregarlo si lo tienes en la BD
+          instructor: 'Instructor no disponible',
+          estadoPago: r.pagado === 1 ? 'Pagado' : 'Pendiente',
+          estadoReserva: r.estado,
+          descripcion: `Método de pago: ${r.metodo_pago || 'N/A'}`,
+          ubicacion: `Código: ${r.codigo_confirmacion || 'N/A'}`
+        }));
+        setReservas(datos);
+      })
+      .catch(error => {
+        console.error("Error al obtener reservas", error);
+      });
+  }, [id_usuario, navigate]);
+
+
+  };
   // Estilos con la paleta de colores
   const styles = {
     mainContainer: {
@@ -519,6 +508,6 @@ const VerReservas = () => {
       )}
     </div>
   );
-};
+;
 
 export default VerReservas;
