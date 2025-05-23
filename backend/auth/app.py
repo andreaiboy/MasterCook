@@ -11,7 +11,7 @@ CORS(app)
 def login():
     # Obtiene el JSON del cuerpo de la solicitud (usuario y contraseña)
     data = request.get_json()
-    username = data.get("username")
+    correo = data.get("username")
     password = data.get("password")
 
     # Se conecta a la base de datos MySQL ejecutándose en el contenedor llamado 'db'
@@ -24,7 +24,7 @@ def login():
     # Crea un cursor que devuelve resultados como diccionarios
     cursor = db.cursor(dictionary=True)
     # Ejecuta una consulta SQL para buscar un usuario con ese username y password
-    cursor.execute("SELECT * FROM USUARIO WHERE nombre_usuario=%s AND contrasena=%s", (username, password))
+    cursor.execute("SELECT * FROM USUARIO WHERE correo=%s AND contrasena=%s", (correo, password))
     # Obtiene el primer resultado (si existe)
     user = cursor.fetchone()
     cursor.close()

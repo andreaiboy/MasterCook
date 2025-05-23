@@ -7,11 +7,23 @@ function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+  const [popupError, setPopupError] = useState(false);
 
+  const showMessage = (message, isError = false) => {
+    setPopupMessage(message);
+    setPopupError(isError);
+    setShowPopup(true);
+    setTimeout(() => {
+      setShowPopup(false);
+      if (!isError) navigate("/navegar");  
+    }, 2000);
+  };
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  const AUTH_API_URL = process.env.REACT_APP_AUTH_API || 'http://localhost:5001';
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -22,9 +34,9 @@ function Login() {
       });
 
       const data = await response.json();
-      setMessage(data.message);
+      showMessage(data.message);
     } catch (error) {
-      setMessage("Error al conectar con el servidor.");
+      showMessage("Error al conectar con el servidor.",true);
     }
   };
 
@@ -141,6 +153,24 @@ function Login() {
   };
 
   return (
+    <>
+        {showPopup && (
+        <div style={{
+          position: "fixed",
+          top: "20px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          backgroundColor: popupError ? "#f44336" : "#4CAF50",
+          color: "#fff",
+          padding: "12px 24px",
+          borderRadius: "8px",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+          zIndex: 1000,
+          fontWeight: "bold"
+        }}>
+          {popupMessage}
+        </div>
+      )}
     <div style={styles.body}>
       <div style={styles.container}>
         <img src="/logo.png" alt="Logo" style={styles.logo} />
@@ -251,6 +281,7 @@ function Login() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 
