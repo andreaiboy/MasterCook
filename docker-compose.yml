@@ -133,4 +133,4 @@ services:
       - REACT_APP_RESERVAS_API=http://reservas:5000
       - REACT_APP_TALLERES_API=http://talleres:5000
       - REACT_APP_SINGUP_API=http://singup:5000
-            - REACT_APP_SINGUP_API=http://singup:5000
+      - REACT_APP_NAVEGAR_API=http://singup:5000
