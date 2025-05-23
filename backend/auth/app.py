@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 # Importa el conector de MySQL para Python
 import mysql.connector# Importa CORS para permitir peticiones desde otros orígenes (como el frontend en React)
 from flask_cors import CORS
@@ -6,6 +6,8 @@ from flask_cors import CORS
 app = Flask(__name__)
 # Habilita CORS para toda la app, permitiendo que el frontend consuma este backend
 CORS(app)
+
+app.secret_key = "Jujar2307."
 # Define una ruta (endpoint) POST en /login
 @app.route('/login', methods=['POST'])
 def login():
