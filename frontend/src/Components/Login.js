@@ -34,7 +34,15 @@ function Login() {
       });
 
       const data = await response.json();
-      showMessage(data.message);
+      if (response.ok) 
+      {
+      // Solo si es login exitoso
+      showMessage(data.message); // navegará automáticamente desde aquí
+      } else 
+      {
+      // Si hubo error (como credenciales inválidas)
+      showMessage(data.message || "Credenciales incorrectas", true); // isError = true evita navegar
+      }
     } catch (error) {
       showMessage("Error al conectar con el servidor.",true);
     }
