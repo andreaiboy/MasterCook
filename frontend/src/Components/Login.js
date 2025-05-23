@@ -246,46 +246,7 @@ function Login() {
         </a>
 
         <div style={{ marginTop: "25px", borderTop: "1px solid #6B8E23", paddingTop: "15px" }}>
-          <a 
-            onClick={() => navigate("/reservartaller")} 
-            style={{ ...styles.link, display: "inline-block", margin: "0 10px" }}
-            onMouseEnter={(e) => e.target.style.color = styles.linkHover.color}
-            onMouseLeave={(e) => e.target.style.color = styles.link.color}
-          >
-            taller
-          </a>
-          <a 
-            onClick={() => navigate("/verreservas")} 
-            style={{ ...styles.link, display: "inline-block", margin: "0 10px" }}
-            onMouseEnter={(e) => e.target.style.color = styles.linkHover.color}
-            onMouseLeave={(e) => e.target.style.color = styles.link.color}
-          >
-            Reservas
-          </a>
-          <a 
-            onClick={() => navigate("/perfil")} 
-            style={{ ...styles.link, display: "inline-block", margin: "0 10px" }}
-            onMouseEnter={(e) => e.target.style.color = styles.linkHover.color}
-            onMouseLeave={(e) => e.target.style.color = styles.link.color}
-          >
-            perfil
-          </a>
-          <a 
-            onClick={() => navigate("/navegar")} 
-            style={{ ...styles.link, display: "inline-block", margin: "0 10px" }}
-            onMouseEnter={(e) => e.target.style.color = styles.linkHover.color}
-            onMouseLeave={(e) => e.target.style.color = styles.link.color}
-          >
-            navegar
-          </a> 
-          <a 
-            onClick={() => navigate("/pago")} 
-            style={{ ...styles.link, display: "inline-block", margin: "0 10px" }}
-            onMouseEnter={(e) => e.target.style.color = styles.linkHover.color}
-            onMouseLeave={(e) => e.target.style.color = styles.link.color}
-          >
-            pago
-          </a> 
+         
         </div>
       </div>
     </div>
