@@ -27,26 +27,55 @@
       if (!formData.nombre.trim()) newErrors.nombre = "Campo requerido";
       if (!formData.usuario.trim()) newErrors.usuario = "Campo Requerido";
       if (!formData.email.includes("@")) newErrors.email = "Email inválido";
-      if (formData.password.length < 6) newErrors.password = "Mínimo 6 caracteres";
+      if (formData.password.length < 8) newErrors.password = "Mínimo 6 caracteres";
       if (formData.password !== formData.confirmPassword)
         newErrors.confirmPassword = "No coincide";
 
       setErrors(newErrors);
       return Object.keys(newErrors).length === 0;
     };
+    const SINGUP_API_URL = process.env.REACT_APP_SINGUP_API || 'http://localhost:5002';
+    const [popupMessage, setPopupMessage] = useState("");
+    const [popupError, setPopupError] = useState(false);
+    const [showPopup, setShowPopup] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
       e.preventDefault();
-      if (validate()) {
-        alert("Formulario enviado");
-        setFormData({
-          nombre: "",
-          usuario: "",
-          email: "",
-          password: "",
-          confirmPassword: "",
+
+      if (!validate()) return;
+
+      try {
+        const response = await fetch(`${SINGUP_API_URL}/register`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            nombre: formData.nombre,
+            usuario: formData.usuario,
+            email: formData.email,
+            password: formData.password,
+          }),
         });
+
+        const data = await response.json();
+
+        if (response.status === 201) {
+          showMessage("Registro exitoso");
+        } else {
+          showMessage(data.message || "Error en el registro", true);
+        }
+      } catch (error) {
+        showMessage("Error al conectar con el servidor", true);
       }
+    };
+
+    const showMessage = (message, isError = false) => {
+      setPopupMessage(message);
+      setPopupError(isError);
+      setShowPopup(true);
+      setTimeout(() => {
+        setShowPopup(false);
+        if (!isError) navigate("/login"); 
+      }, 2000);
     };
 
     // Estilos con la paleta de colores proporcionada
@@ -164,6 +193,23 @@
     };
 
     return (
+      <>
+      {showPopup && (
+        <div style={{
+          position: "absolute",
+          top: "20px",
+          right: "20px",
+          backgroundColor: popupError ? "#D94F4F" : "#6B8E23",
+          color: "white",
+          padding: "15px 20px",
+          borderRadius: "10px",
+          boxShadow: "0 0 10px rgba(0,0,0,0.2)",
+          zIndex: 1000,
+          fontWeight: "bold",
+        }}>
+          {popupMessage}
+        </div>
+      )}
       <div style={styles.container}>
         <div style={styles.card}>
           <div style={styles.imageSection}>
@@ -196,15 +242,15 @@
               <label style={styles.label}>Usuario</label>
               <input
                 type="text"
-                name="nombre"
-                value={formData.nombre}
+                name="Usuario"
+                value={formData.usuario}
                 onChange={handleChange}
-                onFocus={() => setFocusedField("nombre")}
+                onFocus={() => setFocusedField("Usuario")}
                 onBlur={() => setFocusedField("")}
                 style={{
                   ...styles.input,
                   ...(errors.nombre && styles.inputError),
-                  ...(focusedField === "nombre" && styles.inputFocus),
+                  ...(focusedField === "Usuario" && styles.inputFocus),
                 }}
                 placeholder="Ej: juan_.perez"
                 />
@@ -244,7 +290,7 @@
                   ...(errors.password && styles.inputError),
                   ...(focusedField === "password" && styles.inputFocus),
                 }}
-                placeholder="Mínimo 6 caracteres"
+                placeholder="Mínimo 8 caracteres"
               />
               {errors.password && <div style={styles.errorText}>{errors.password}</div>}
             </div>
@@ -290,6 +336,7 @@
           </form>
         </div>
       </div>
+      </>
     );
   };
 
