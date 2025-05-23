@@ -1,46 +1,438 @@
-import React, { useEffect, useState } from "react";
-
-const API_URL = process.env.REACT_APP_CURSOS_API || "http://localhost:5003";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import ComidaItaliana from './ComidaItaliana.jpg';
+import ReposFrancesa from './ReposFrancesa.jpg';
+import ComidaAsiatica from './ComidaAsiatica.jpg';
 
 const Navegar = () => {
-  const [cursos, setCursos] = useState([]);
+  const navigate = useNavigate();
+  const [talleres, setTalleres] = useState([]);
+  const [categorias, setCategorias] = useState([]);
+  const [filtroCategoria, setFiltroCategoria] = useState("");
+  const [filtroOrden, setFiltroOrden] = useState("");
+  const [cargando, setCargando] = useState(true);
+  const [tallerExpandido, setTallerExpandido] = useState(null);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/cursos`)
-      .then((res) => res.json())
-      .then((data) => setCursos(data))
-      .catch((err) => console.error("Error al obtener los cursos:", err));
+    setTimeout(() => {
+      const datosEjemplo = [
+        {
+          id: 1,
+          nombre: "Cocina Italiana",
+          descripcion: "Aprende las técnicas tradicionales de pasta y salsas.",
+          categoria: "Internacional",
+          fecha: "15/10/2023",
+          precio: 120,
+          cupos_disponibles: 5,
+          cupos_totales: 15,
+          imagen: ComidaItaliana
+        },
+        {
+          id: 2,
+          nombre: "Repostería Francesa",
+          descripcion: "Domina los clásicos de la pastelería francesa.",
+          categoria: "Repostería",
+          fecha: "20/10/2023",
+          precio: 150,
+          cupos_disponibles: 2,
+          cupos_totales: 10,
+          imagen: ReposFrancesa
+        },
+        {
+          id: 3,
+          nombre: "Cocina Asiática",
+          descripcion: "Técnicas auténticas de cocina tailandesa y japonesa.",
+          categoria: "Internacional",
+          fecha: "25/10/2023",
+          precio: 135,
+          cupos_disponibles: 8,
+          cupos_totales: 12,
+          imagen: ComidaAsiatica
+        },
+        {
+          id: 4,
+          nombre: "Cocina Italiana",
+          descripcion: "Aprende las técnicas tradicionales de pasta y salsas.",
+          categoria: "Internacional",
+          fecha: "30/10/2023",
+          precio: 110,
+          cupos_disponibles: 7,
+          cupos_totales: 12,
+          imagen: ComidaItaliana
+        },
+        {
+          id: 5,
+          nombre: "Repostería Francesa",
+          descripcion: "Domina los clásicos de la pastelería francesa.",
+          categoria: "Repostería",
+          fecha: "05/11/2023",
+          precio: 140,
+          cupos_disponibles: 3,
+          cupos_totales: 10,
+          imagen: ReposFrancesa
+        },
+        {
+          id: 6,
+          nombre: "Cocina Asiática",
+          descripcion: "Técnicas auténticas de cocina tailandesa y japonesa.",
+          categoria: "Internacional",
+          fecha: "10/11/2023",
+          precio: 125,
+          cupos_disponibles: 9,
+          cupos_totales: 15,
+          imagen: ComidaAsiatica
+        }
+      ];
+
+      setTalleres(datosEjemplo);
+      setCategorias([...new Set(datosEjemplo.map(t => t.categoria))]);
+      setCargando(false);
+    }, 1000);
   }, []);
 
+  const talleresFiltrados = filtroCategoria
+    ? talleres.filter(taller => taller.categoria === filtroCategoria)
+    : talleres;
+
+  const ordenarTalleres = (talleres) => {
+    const talleresOrdenados = [...talleres];
+    
+    switch(filtroOrden) {
+      case "az":
+        return talleresOrdenados.sort((a, b) => a.nombre.localeCompare(b.nombre));
+      case "za":
+        return talleresOrdenados.sort((a, b) => b.nombre.localeCompare(a.nombre));
+      case "precio-asc":
+        return talleresOrdenados.sort((a, b) => a.precio - b.precio);
+      case "precio-desc":
+        return talleresOrdenados.sort((a, b) => b.precio - a.precio);
+      default:
+        return talleresOrdenados;
+    }
+  };
+
+  const talleresOrdenados = ordenarTalleres(talleresFiltrados);
+
+  const handleToggleInfo = (id) => {
+    setTallerExpandido(tallerExpandido === id ? null : id);
+  };
+
+  const handleReservar = (tallerId) => {
+    navigate(`/reservartaller/${tallerId}`);
+  };
+
+  const styles = {
+    mainContainer: {
+      minHeight: "100vh",
+      backgroundColor: "#FAFAFA",
+      display: "flex",
+      flexDirection: "column",
+      fontFamily: "'Century Gothic', Arial, sans-serif"
+    },
+    nav: {
+      backgroundColor: "#D94F4F",
+      padding: "15px 0",
+      display: "flex",
+      justifyContent: "center",
+      boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+      position: "sticky",
+      top: 0,
+      zIndex: 100
+    },
+    navButton: {
+      color: "#FFF3E2",
+      background: "none",
+      border: "none",
+      fontWeight: "600",
+      cursor: "pointer",
+      padding: "8px 20px",
+      margin: "0 10px",
+      borderRadius: "20px",
+      transition: "all 0.3s",
+      fontSize: "14px",
+      textTransform: "uppercase"
+    },
+    content: {
+      padding: "20px",
+      width: "100%",
+      maxWidth: "1200px",
+      margin: "0 auto",
+      flex: 1
+    },
+    filtersContainer: {
+      display: 'flex',
+      gap: '20px',
+      marginBottom: '20px',
+      flexWrap: 'wrap',
+      justifyContent: 'center'
+    },
+    select: {
+      padding: "10px",
+      borderRadius: "10px",
+      border: "1px solid #ccc",
+      fontSize: "14px",
+      width: "100%",
+      maxWidth: "300px",
+      backgroundColor: "#FFF",
+      cursor: "pointer"
+    },
+    gridContainer: {
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+      gap: "20px",
+      padding: "10px"
+    },
+    card: {
+      backgroundColor: "#FFF",
+      borderRadius: "10px",
+      boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+      overflow: "hidden",
+      display: "flex",
+      flexDirection: "column",
+      padding: "15px",
+      height: "auto",
+      minHeight: "300px",
+      transition: "transform 0.3s",
+      ':hover': {
+        transform: "translateY(-5px)"
+      }
+    },
+    image: {
+      width: "100%",
+      height: "150px",
+      objectFit: "cover",
+      borderRadius: "8px",
+      marginBottom: "10px"
+    },
+    tallerInfo: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column"
+    },
+    infoText: {
+      fontSize: "14px",
+      color: "#333",
+      margin: "4px 0"
+    },
+    buttonsContainer: {
+      display: "flex",
+      gap: "10px",
+      marginTop: "10px"
+    },
+    infoButton: {
+      backgroundColor: "#6B8E23",
+      color: "#fff",
+      border: "none",
+      borderRadius: "8px",
+      padding: "8px 12px",
+      cursor: "pointer",
+      fontWeight: "bold",
+      fontSize: "13px",
+      flex: 1,
+      transition: "all 0.3s",
+      ':hover': {
+        backgroundColor: "#5a7a1d"
+      }
+    },
+    reservaButton: {
+      backgroundColor: "#D94F4F",
+      color: "#fff",
+      border: "none",
+      borderRadius: "8px",
+      padding: "8px 12px",
+      cursor: "pointer",
+      fontWeight: "bold",
+      fontSize: "13px",
+      flex: 1,
+      transition: "all 0.3s",
+      ':hover': {
+        backgroundColor: "#c03e3e"
+      }
+    },
+    descripcion: {
+      marginTop: "10px",
+      fontSize: "14px",
+      color: "#444",
+      padding: "5px 0"
+    },
+    loading: {
+      textAlign: "center",
+      padding: "20px",
+      color: "#555"
+    }
+  };
+
   return (
-    <div className="container mt-4">
-      <h2 className="mb-4 text-center">Talleres disponibles</h2>
-      <div className="row">
-        {cursos.map((curso) => (
-          <div key={curso.id_curso} className="col-md-4 mb-4">
-            <div className="card h-100 shadow-sm">
-              {curso.imagen_url && (
-                <img
-                  src={curso.imagen_url}
-                  className="card-img-top"
-                  alt={curso.nombre}
-                  style={{ height: "200px", objectFit: "cover" }}
-                />
-              )}
-              <div className="card-body d-flex flex-column">
-                <h5 className="card-title">{curso.nombre}</h5>
-                <p className="card-text text-muted">{curso.descripcion?.slice(0, 100)}...</p>
-                <p className="card-text"><strong>Precio:</strong> ${curso.precio}</p>
-                <p className="card-text"><strong>Duración:</strong> {curso.duracion_horas} hrs</p>
-                <p className="card-text"><strong>Instructor:</strong> {curso.instructor}</p>
-                <div className="mt-auto d-flex justify-content-between">
-                  <button className="btn btn-outline-primary btn-sm">Más información</button>
-                  <button className="btn btn-success btn-sm">Reservar</button>
+    <div style={styles.mainContainer}>
+      <nav style={styles.nav}>
+        <button 
+          style={styles.navButton}
+          onClick={() => navigate('/navegar')}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = "#FFF3E2";
+            e.target.style.color = "#D94F4F";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = "transparent";
+            e.target.style.color = "#FFF3E2";
+          }}
+        >
+          Talleres
+        </button>
+        <button 
+          style={styles.navButton}
+          onClick={() => navigate('/reservartaller')}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = "#FFF3E2";
+            e.target.style.color = "#D94F4F";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = "transparent";
+            e.target.style.color = "#FFF3E2";
+          }}
+        >
+          Reservar
+        </button>
+        <button 
+          style={styles.navButton}
+          onClick={() => navigate('/verreservas')}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = "#FFF3E2";
+            e.target.style.color = "#D94F4F";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = "transparent";
+            e.target.style.color = "#FFF3E2";
+          }}
+        >
+          Mis Reservas
+        </button>
+        <button 
+          style={styles.navButton}
+          onClick={() => navigate('/perfil')}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = "#FFF3E2";
+            e.target.style.color = "#D94F4F";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = "transparent";
+            e.target.style.color = "#FFF3E2";
+          }}
+        >
+          Perfil
+        </button>
+        <button 
+          style={styles.navButton}
+          onClick={() => navigate('/pago')}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = "#FFF3E2";
+            e.target.style.color = "#D94F4F";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = "transparent";
+            e.target.style.color = "#FFF3E2";
+          }}
+        >
+          Pago
+        </button>
+        <button 
+          style={styles.navButton}
+          onClick={() => navigate('/')}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = "#FFF3E2";
+            e.target.style.color = "#D94F4F";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = "transparent";
+            e.target.style.color = "#FFF3E2";
+          }}
+        >
+          Cerrar Sesión
+        </button>
+      </nav>
+
+      <div style={styles.content}>
+        <div style={styles.filtersContainer}>
+          <select
+            value={filtroCategoria}
+            onChange={(e) => setFiltroCategoria(e.target.value)}
+            style={styles.select}
+          >
+            <option value="">Todas las categorías</option>
+            {categorias.map((categoria, idx) => (
+              <option key={idx} value={categoria}>{categoria}</option>
+            ))}
+          </select>
+
+          <select
+            value={filtroOrden}
+            onChange={(e) => setFiltroOrden(e.target.value)}
+            style={styles.select}
+          >
+            <option value="">Orden por defecto</option>
+            <option value="az">Ordenar A-Z</option>
+            <option value="za">Ordenar Z-A</option>
+            <option value="precio-asc">Precio: Bajo a Alto</option>
+            <option value="precio-desc">Precio: Alto a Bajo</option>
+          </select>
+        </div>
+
+        {cargando ? (
+          <p style={styles.loading}>Cargando talleres...</p>
+        ) : (
+          <div style={styles.gridContainer}>
+            {talleresOrdenados.map((taller) => (
+              <motion.div 
+                key={taller.id} 
+                style={styles.card}
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <img src={taller.imagen} alt={taller.nombre} style={styles.image} />
+                <div style={styles.tallerInfo}>
+                  <p style={styles.infoText}><strong>{taller.nombre}</strong></p>
+                  <p style={styles.infoText}>Categoría: {taller.categoria}</p>
+                  <p style={styles.infoText}>Fecha: {taller.fecha}</p>
+                  <p style={styles.infoText}>Precio: ${taller.precio}</p>
+                  <p style={styles.infoText}>Cupos: {taller.cupos_disponibles}/{taller.cupos_totales}</p>
+
+                  <div style={styles.buttonsContainer}>
+                    <button
+                      style={styles.infoButton}
+                      onClick={() => handleToggleInfo(taller.id)}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = "#5a7a1d"}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = "#6B8E23"}
+                    >
+                      {tallerExpandido === taller.id ? 'Ocultar' : '+ Info'}
+                    </button>
+                    <button
+                      style={styles.reservaButton}
+                      onClick={() => navigate('/reservartaller')}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = "#c03e3e"}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = "#D94F4F"}
+                    >
+                      Buscar
+                    </button>
+                  </div>
+
+                  <AnimatePresence>
+                    {tallerExpandido === taller.id && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <p style={styles.descripcion}>{taller.descripcion}</p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

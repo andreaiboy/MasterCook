@@ -28,13 +28,13 @@ def register():
         cursor = db.cursor()
 
         # Verificar si el usuario o correo ya existe
-        cursor.execute("SELECT id_usuario FROM USUARIO WHERE nombre_usuario = %s OR correo = %s", (usuario, correo))
+        cursor.execute("SELECT id_usuario FROM USUARIO WHERE usuario = %s OR correo = %s", (usuario, correo))
         if cursor.fetchone():
             return jsonify({"message": "Usuario o correo ya registrados"}), 409
 
         # Insertar nuevo usuario
         cursor.execute(
-            "INSERT INTO USUARIO (nombre, nombre_usuario, correo, contrasena) VALUES (%s, %s, %s, %s)",
+            "INSERT INTO USUARIO (nombre, usuario, correo, contrasena) VALUES (%s, %s, %s, %s)",
             (nombre, usuario, correo, contrasena)
         )
         db.commit()
@@ -49,4 +49,4 @@ def register():
         return jsonify({"message": "Error interno del servidor"}), 500
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5005)
+    app.run(host="0.0.0.0", port=5000)

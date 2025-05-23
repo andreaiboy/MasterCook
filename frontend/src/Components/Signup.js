@@ -34,7 +34,7 @@
       setErrors(newErrors);
       return Object.keys(newErrors).length === 0;
     };
-    const SINGUP_API_URL = process.env.REACT_APP_SINGUP_API || 'http://localhost:5005';
+    const SINGUP_API_URL = process.env.REACT_APP_SINGUP_API || 'http://localhost:5002';
     const [popupMessage, setPopupMessage] = useState("");
     const [popupError, setPopupError] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
@@ -74,7 +74,7 @@
       setShowPopup(true);
       setTimeout(() => {
         setShowPopup(false);
-        if (!isError) navigate("/"); 
+        if (!isError) navigate("/login"); 
       }, 2000);
     };
 
@@ -242,19 +242,19 @@
               <label style={styles.label}>Usuario</label>
               <input
                 type="text"
-                name="usuario"
+                name="Usuario"
                 value={formData.usuario}
                 onChange={handleChange}
-                onFocus={() => setFocusedField("usuario")}
+                onFocus={() => setFocusedField("Usuario")}
                 onBlur={() => setFocusedField("")}
                 style={{
                   ...styles.input,
-                  ...(errors.usuario && styles.inputError),
-                  ...(focusedField === "usuario" && styles.inputFocus),
+                  ...(errors.nombre && styles.inputError),
+                  ...(focusedField === "Usuario" && styles.inputFocus),
                 }}
                 placeholder="Ej: juan_.perez"
                 />
-                {errors.usuario && <div style = {styles.errorText}>{errors.usuario}</div>}
+                {errors.nombre && <div style = {styles.errorText}>{errors.nombre}</div>}
             </div>
 
             <div style={{ marginBottom: "20px" }}>
