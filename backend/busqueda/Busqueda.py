@@ -21,12 +21,27 @@ def get_cursos():
         cursor = conn.cursor(dictionary=True)
 
         query = """
-            SELECT c.id_curso, c.nombre, c.fecha, c.precio, c.cupo, c.imagen_url,
-                   c.descripcion, c.instructor, c.duracion_horas,
-                   cat.nombre AS categoria
+            SELECT 
+                c.id_curso,
+                c.nombre,
+                c.fecha,
+                c.precio,
+                c.cupo,
+                c.imagen_url,
+                c.descripcion,
+                c.instructor,
+                c.duracion_horas,
+                cat.nombre AS categoria,
+                COUNT(r.id_reserva) AS inscritos,
+                (c.cupo - COUNT(r.id_reserva)) AS cupos_disponibles
             FROM CURSOS c
             JOIN CATEGORIAS cat ON c.id_categoria = cat.id_categoria
+            LEFT JOIN Reservacion r ON c.id_curso = r.id_curso
+            LEFT JOIN ESTADOS_RESERVA e ON r.id_estado = e.id_estado
+            WHERE e.nombre IS NULL OR e.nombre != 'Cancelada'
+            GROUP BY c.id_curso
         """
+
         cursor.execute(query)
         cursos = cursor.fetchall()
 

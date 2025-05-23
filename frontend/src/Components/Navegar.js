@@ -13,9 +13,9 @@ const Navegar = () => {
 
   useEffect(() => {
     // URL del backend (puedes usar variable de entorno si quieres)
-    const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5004";
+    const NAVEGAR_API_URL = process.env.REACT_APP_NAVEGAR_API || "http://localhost:5004";
 
-    fetch(`${API_URL}/api/cursos`)
+    fetch(`${NAVEGAR_API_URL}/api/cursos`)
       .then((res) => res.json())
       .then((data) => {
         setTalleres(data);
@@ -326,7 +326,7 @@ const Navegar = () => {
           <div style={styles.gridContainer}>
             {talleresOrdenados.map((taller) => (
               <motion.div 
-                key={taller.id} 
+                key={taller.id_curso} 
                 style={styles.card}
                 whileHover={{ scale: 1.02 }}
                 transition={{ type: "spring", stiffness: 300 }}
@@ -337,29 +337,37 @@ const Navegar = () => {
                   <p style={styles.infoText}>Categoría: {taller.categoria}</p>
                   <p style={styles.infoText}>Fecha: {taller.fecha}</p>
                   <p style={styles.infoText}>Precio: ${taller.precio}</p>
-                  <p style={styles.infoText}>Cupos: {taller.cupos_disponibles}/{taller.cupos_totales}</p>
-
+                    <p style={styles.infoText}>Cupos disponibles: {taller.cupos_disponibles} de {taller.cupos_totales} </p>
                   <div style={styles.buttonsContainer}>
                     <button
                       style={styles.infoButton}
-                      onClick={() => handleToggleInfo(taller.id)}
+                      onClick={() => handleToggleInfo(taller.id_curso)}
                       onMouseEnter={(e) => e.target.style.backgroundColor = "#5a7a1d"}
                       onMouseLeave={(e) => e.target.style.backgroundColor = "#6B8E23"}
                     >
-                      {tallerExpandido === taller.id ? 'Ocultar' : '+ Info'}
+                      {tallerExpandido === taller.id_curso ? 'Ocultar' : '+ Info'}
                     </button>
                     <button
-                      style={styles.reservaButton}
-                      onClick={() => navigate('/reservartaller')}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = "#c03e3e"}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = "#D94F4F"}
+                      style={{
+                        ...styles.reservaButton,
+                        opacity: taller.cupos_disponibles === 0 ? 0.5 : 1,
+                        cursor: taller.cupos_disponibles === 0 ? 'not-allowed' : 'pointer'
+                      }}
+                       disabled={taller.cupos_disponibles === 0}
+                        onClick={() => navigate(`/reservartaller/${taller.id_curso}`)}
+                      onMouseEnter={(e) => {
+                        if (taller.cupos_disponibles > 0) e.target.style.backgroundColor = "#c03e3e";
+                      }}
+                      onMouseLeave={(e) => {
+                        if (taller.cupos_disponibles > 0) e.target.style.backgroundColor = "#D94F4F";
+                      }}
                     >
-                      Buscar
+                       {taller.cupos_disponibles === 0 ? "Sin cupo" : "Reservar"}
                     </button>
                   </div>
 
                   <AnimatePresence>
-                    {tallerExpandido === taller.id && (
+                    {tallerExpandido === taller.id_curso && (
                       <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
