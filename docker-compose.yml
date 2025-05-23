@@ -82,6 +82,22 @@ services:
       - MYSQL_USER=root
       - MYSQL_PASSWORD=12345
       - MYSQL_DATABASE=mastercook_db
+    
+  buscar:
+    # Construye la imagen Docker desde la carpeta ./backend (donde está el Dockerfile)
+    build: ./backend/busqueda
+    # Expone el puerto 5000 del contenedor en el puerto 5000 del host
+    ports:
+      - "5006:5000"
+    # Espera a que el contenedor de la base de datos esté listo antes de arrancar
+    depends_on:
+      - db
+    # Variables de entorno usadas por Flask para conectarse a MySQL
+    environment:
+      - MYSQL_HOST=db # nombre del contenedor de la BD
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=12345
+      - MYSQL_DATABASE=mastercook_db
 
   db:
     # Utiliza la imagen oficial de MySQL 8.0
@@ -117,3 +133,4 @@ services:
       - REACT_APP_RESERVAS_API=http://reservas:5000
       - REACT_APP_TALLERES_API=http://talleres:5000
       - REACT_APP_SINGUP_API=http://singup:5000
+            - REACT_APP_SINGUP_API=http://singup:5000

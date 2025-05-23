@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import ComidaItaliana from './ComidaItaliana.jpg';
-import ReposFrancesa from './ReposFrancesa.jpg';
-import ComidaAsiatica from './ComidaAsiatica.jpg';
 
 const Navegar = () => {
   const navigate = useNavigate();
@@ -15,94 +12,39 @@ const Navegar = () => {
   const [tallerExpandido, setTallerExpandido] = useState(null);
 
   useEffect(() => {
-    setTimeout(() => {
-      const datosEjemplo = [
-        {
-          id: 1,
-          nombre: "Cocina Italiana",
-          descripcion: "Aprende las técnicas tradicionales de pasta y salsas.",
-          categoria: "Internacional",
-          fecha: "15/10/2023",
-          precio: 120,
-          cupos_disponibles: 5,
-          cupos_totales: 15,
-          imagen: ComidaItaliana
-        },
-        {
-          id: 2,
-          nombre: "Repostería Francesa",
-          descripcion: "Domina los clásicos de la pastelería francesa.",
-          categoria: "Repostería",
-          fecha: "20/10/2023",
-          precio: 150,
-          cupos_disponibles: 2,
-          cupos_totales: 10,
-          imagen: ReposFrancesa
-        },
-        {
-          id: 3,
-          nombre: "Cocina Asiática",
-          descripcion: "Técnicas auténticas de cocina tailandesa y japonesa.",
-          categoria: "Internacional",
-          fecha: "25/10/2023",
-          precio: 135,
-          cupos_disponibles: 8,
-          cupos_totales: 12,
-          imagen: ComidaAsiatica
-        },
-        {
-          id: 4,
-          nombre: "Cocina Italiana",
-          descripcion: "Aprende las técnicas tradicionales de pasta y salsas.",
-          categoria: "Internacional",
-          fecha: "30/10/2023",
-          precio: 110,
-          cupos_disponibles: 7,
-          cupos_totales: 12,
-          imagen: ComidaItaliana
-        },
-        {
-          id: 5,
-          nombre: "Repostería Francesa",
-          descripcion: "Domina los clásicos de la pastelería francesa.",
-          categoria: "Repostería",
-          fecha: "05/11/2023",
-          precio: 140,
-          cupos_disponibles: 3,
-          cupos_totales: 10,
-          imagen: ReposFrancesa
-        },
-        {
-          id: 6,
-          nombre: "Cocina Asiática",
-          descripcion: "Técnicas auténticas de cocina tailandesa y japonesa.",
-          categoria: "Internacional",
-          fecha: "10/11/2023",
-          precio: 125,
-          cupos_disponibles: 9,
-          cupos_totales: 15,
-          imagen: ComidaAsiatica
-        }
-      ];
+    // URL del backend (puedes usar variable de entorno si quieres)
+    const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5004";
 
-      setTalleres(datosEjemplo);
-      setCategorias([...new Set(datosEjemplo.map(t => t.categoria))]);
-      setCargando(false);
-    }, 1000);
+    fetch(`${API_URL}/api/cursos`)
+      .then((res) => res.json())
+      .then((data) => {
+        setTalleres(data);
+        // Extraer categorías únicas del backend
+        setCategorias([...new Set(data.map((t) => t.categoria))]);
+        setCargando(false);
+      })
+      .catch((error) => {
+        console.error("Error al cargar cursos:", error);
+        setCargando(false);
+      });
   }, []);
 
   const talleresFiltrados = filtroCategoria
-    ? talleres.filter(taller => taller.categoria === filtroCategoria)
+    ? talleres.filter((taller) => taller.categoria === filtroCategoria)
     : talleres;
 
   const ordenarTalleres = (talleres) => {
     const talleresOrdenados = [...talleres];
-    
-    switch(filtroOrden) {
+
+    switch (filtroOrden) {
       case "az":
-        return talleresOrdenados.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        return talleresOrdenados.sort((a, b) =>
+          a.nombre.localeCompare(b.nombre)
+        );
       case "za":
-        return talleresOrdenados.sort((a, b) => b.nombre.localeCompare(a.nombre));
+        return talleresOrdenados.sort((a, b) =>
+          b.nombre.localeCompare(a.nombre)
+        );
       case "precio-asc":
         return talleresOrdenados.sort((a, b) => a.precio - b.precio);
       case "precio-desc":
@@ -389,7 +331,7 @@ const Navegar = () => {
                 whileHover={{ scale: 1.02 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <img src={taller.imagen} alt={taller.nombre} style={styles.image} />
+                <img src={taller.imagen_url} alt={taller.nombre} style={styles.image} />
                 <div style={styles.tallerInfo}>
                   <p style={styles.infoText}><strong>{taller.nombre}</strong></p>
                   <p style={styles.infoText}>Categoría: {taller.categoria}</p>
