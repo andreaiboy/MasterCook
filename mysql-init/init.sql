@@ -90,24 +90,40 @@ CREATE TABLE IF NOT EXISTS PAGOS (
 );
 
 
-
 -- Insertar usuarios
 INSERT INTO USUARIO (nombre, nombre_usuario, contrasena, correo) VALUES
-  ('Julio Robles', 'Jujar2307', 'Jujar2307.', 'jujarobles@gmal.com'),
-  ('Diego Urbina', 'Diegol', '12345678', 'diegol@gmail.com');
+  ('Julio Robles', 'Jujar2307', 'Jujar2307.', 'jujarobles@gmail.com'),
+  ('Diego Urbina', 'Diegol', '12345678', 'diegol@gmail.com'),
+  ('Ana Pérez', 'AnitaChef', 'recetas123', 'ana.perez@gmail.com'),
+  ('Luis Gómez', 'LuigiMaster', 'panadero88', 'luis.gomez@gmail.com'),
+  ('María López', 'Mariamix', 'mixcook45', 'maria.lopez@gmail.com');
 
--- Insertar cursos
-INSERT INTO CURSOS (nombre, categoria, fecha, precio, cupo, imagen_url) VALUES
-  ('Repostería básica', 'Reposteria', '2025-06-10', 250.00, 20, '/images/cursos/REPBAS.jpg'),
-  ('Pan artesanal', 'Panaderia', '2025-06-17', 300.00, 15, '/images/cursos/PANART.jpg');
-
--- Insertar reservaciones
-INSERT INTO Reservacion (id_usuario, id_curso) VALUES
-  (1, 1),
-  (2, 1);
-
+-- Insertar categorías
 INSERT INTO CATEGORIAS (nombre) VALUES 
   ('Repostería'), ('Panadería'), ('Cocina Internacional');
 
+-- Insertar cursos
+INSERT INTO CURSOS (nombre, id_categoria, fecha, precio, cupo, imagen_url, descripcion, instructor, duracion_horas) VALUES
+  ('Repostería básica', 1, '2025-06-10', 250.00, 20, '/images/cursos/REPBAS.jpg', 'Curso para principiantes en repostería', 'Chef Sofía', 3),
+  ('Pan artesanal', 2, '2025-06-17', 300.00, 15, '/images/cursos/PANART.jpg', 'Elaboración de pan artesanal en casa', 'Chef Mateo', 4),
+  ('Cocina italiana', 3, '2025-07-05', 400.00, 10, '/images/cursos/ITA.jpg', 'Pastas y salsas desde cero', 'Chef Giulia', 5),
+  ('Pastelería avanzada', 1, '2025-07-12', 450.00, 8, '/images/cursos/PASTADV.jpg', 'Técnicas profesionales de pastelería', 'Chef Pierre', 6),
+  ('Pan sin gluten', 2, '2025-07-19', 320.00, 12, '/images/cursos/SINGLU.jpg', 'Recetas de pan apto para celíacos', 'Chef Laura', 4);
+
+-- Insertar estados de reserva
 INSERT INTO ESTADOS_RESERVA (nombre) VALUES 
   ('Pendiente'), ('Confirmada'), ('Cancelada'), ('Completada');
+
+-- Insertar reservaciones
+INSERT INTO Reservacion (id_usuario, id_curso, id_estado, pagado, metodo_pago, codigo_confirmacion) VALUES
+  (1, 1, 2, TRUE, 'Tarjeta', 'ABC123'),
+  (2, 1, 1, FALSE, NULL, 'XYZ789'),
+  (3, 2, 2, TRUE, 'Transferencia', 'PQR456'),
+  (4, 3, 3, FALSE, NULL, 'LMN321'),
+  (5, 4, 4, TRUE, 'Tarjeta', 'JKL999');
+
+-- Insertar pagos
+INSERT INTO PAGOS (id_reserva, monto, fecha_pago, metodo_pago) VALUES
+  (1, 250.00, '2025-05-20 10:00:00', 'Tarjeta'),
+  (3, 300.00, '2025-05-21 15:30:00', 'Transferencia'),
+  (5, 450.00, '2025-05-22 08:45:00', 'Tarjeta');
