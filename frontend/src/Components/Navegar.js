@@ -15,7 +15,7 @@ const Navegar = () => {
     // URL del backend (puedes usar variable de entorno si quieres)
     const NAVEGAR_API_URL = process.env.REACT_APP_NAVEGAR_API || "http://localhost:5004";
 
-    fetch(`${API_URL}/api/cursos`)
+    fetch(`${NAVEGAR_API_URL}/api/cursos`)
       .then((res) => res.json())
       .then((data) => {
         setTalleres(data);
@@ -348,12 +348,21 @@ const Navegar = () => {
                       {tallerExpandido === taller.id_curso ? 'Ocultar' : '+ Info'}
                     </button>
                     <button
-                      style={styles.reservaButton}
-                      onClick={() => navigate('/reservartaller')}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = "#c03e3e"}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = "#D94F4F"}
+                      style={{
+                        ...styles.reservaButton,
+                        opacity: taller.cupos_disponibles === 0 ? 0.5 : 1,
+                        cursor: taller.cupos_disponibles === 0 ? 'not-allowed' : 'pointer'
+                      }}
+                       disabled={taller.cupos_disponibles === 0}
+                        onClick={() => navigate(`/reservartaller/${taller.id_curso}`)}
+                      onMouseEnter={(e) => {
+                        if (taller.cupos_disponibles > 0) e.target.style.backgroundColor = "#c03e3e";
+                      }}
+                      onMouseLeave={(e) => {
+                        if (taller.cupos_disponibles > 0) e.target.style.backgroundColor = "#D94F4F";
+                      }}
                     >
-                      Buscar
+                       {taller.cupos_disponibles === 0 ? "Sin cupo" : "Reservar"}
                     </button>
                   </div>
 
