@@ -67,9 +67,9 @@ services:
       - MYSQL_USER=root
       - MYSQL_PASSWORD=12345
       - MYSQL_DATABASE=mastercook_db
-  singupo:
+  singup:
     # Construye la imagen Docker desde la carpeta ./backend (donde está el Dockerfile)
-    build: ./backend/singupo
+    build: ./backend/singup
     # Expone el puerto 5000 del contenedor en el puerto 5000 del host
     ports:
       - "5005:5000"

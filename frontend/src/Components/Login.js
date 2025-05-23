@@ -27,7 +27,7 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${API_URL}/login`,  {
+      const response = await fetch(`${AUTH_API_URL}/login`,  {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
@@ -173,7 +173,7 @@ function Login() {
       )}
     <div style={styles.body}>
       <div style={styles.container}>
-        <img src="/logo.png" alt="Logo" style={styles.logo} />
+        <img src="/Logo.png" alt="Logo" style={styles.logo} />
         <h2 style={styles.title}>INICIAR SESIÓN</h2>
 
         <form onSubmit={handleLogin}>

@@ -333,6 +333,20 @@ const ReservarTaller = () => {
           </button>
           <button 
             style={styles.navButton} 
+            onClick={() => navigate('/pago')}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = colors.secondary;
+              e.target.style.color = colors.primary;
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = "transparent";
+              e.target.style.color = colors.secondary;
+            }}
+          >
+            Pago
+          </button>
+          <button 
+            style={styles.navButton} 
             onClick={() => navigate('/')}
             onMouseEnter={(e) => {
               e.target.style.backgroundColor = colors.secondary;

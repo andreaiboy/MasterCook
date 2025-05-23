@@ -3,29 +3,55 @@ import { useNavigate } from 'react-router-dom';
 
 const VerReservas = () => {
   const navigate = useNavigate();
-  
-  // Datos de ejemplo de reservas
+  const [filtro, setFiltro] = useState('todas');
+  const [busqueda, setBusqueda] = useState('');
+  const [reservaSeleccionada, setReservaSeleccionada] = useState(null);
+
+  // Datos de ejemplo de reservas con todos los campos requeridos
   const [reservas, setReservas] = useState([
     {
       id: 1,
       taller: "Cocina Italiana",
       fecha: "2023-11-15",
       hora: "10:00 - 12:00",
-      instructor: "Chef Marco"
+      instructor: "Chef Marco",
+      estadoPago: "Pagado",
+      estadoReserva: "Completada",
+      descripcion: "Aprende a hacer pasta fresca y auténticas salsas italianas.",
+      ubicacion: "Cocina Principal - Edificio A"
     },
     {
       id: 2,
       taller: "Repostería Francesa",
-      fecha: "2023-11-20",
+      fecha: "2023-12-20",
       hora: "16:00 - 18:00",
-      instructor: "Chef Sophie"
+      instructor: "Chef Sophie",
+      estadoPago: "Pendiente",
+      estadoReserva: "Confirmada",
+      descripcion: "Masterclass en la preparación de macarons y éclairs.",
+      ubicacion: "Laboratorio de Repostería"
     },
     {
       id: 3,
       taller: "Cocina Asiática",
-      fecha: new Date().toISOString().split('T')[0], // Reserva para hoy (formato YYYY-MM-DD)
+      fecha: new Date().toISOString().split('T')[0], // Hoy
       hora: "18:00 - 20:00",
-      instructor: "Chef Li"
+      instructor: "Chef Li",
+      estadoPago: "Pagado",
+      estadoReserva: "Confirmada",
+      descripcion: "Técnicas de cocción al wok y preparación de sushi.",
+      ubicacion: "Cocina Oriental - Edificio B"
+    },
+    {
+      id: 4,
+      taller: "Panadería Artesanal",
+      fecha: "2024-01-10",
+      hora: "09:00 - 12:00",
+      instructor: "Chef Antonio",
+      estadoPago: "Pagado",
+      estadoReserva: "Cancelada",
+      descripcion: "Elaboración de panes con fermentación natural.",
+      ubicacion: "Horno de Leña - Edificio C"
     }
   ]);
 
@@ -75,6 +101,34 @@ const VerReservas = () => {
       marginBottom: '20px',
       textAlign: 'center'
     },
+    filtersContainer: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      marginBottom: '20px',
+      flexWrap: 'wrap',
+      gap: '10px'
+    },
+    searchInput: {
+      padding: '10px 15px',
+      borderRadius: '20px',
+      border: '1px solid #EEE',
+      width: '300px',
+      fontSize: '14px'
+    },
+    filterButton: {
+      padding: '8px 15px',
+      borderRadius: '20px',
+      border: 'none',
+      backgroundColor: '#EEE',
+      cursor: 'pointer',
+      margin: '0 5px',
+      transition: 'all 0.3s',
+      fontSize: '14px'
+    },
+    activeFilter: {
+      backgroundColor: '#D94F4F',
+      color: 'white'
+    },
     reservaCard: {
       backgroundColor: 'white',
       border: '1px solid #EEE',
@@ -82,7 +136,13 @@ const VerReservas = () => {
       padding: '20px',
       marginBottom: '15px',
       boxShadow: '0 2px 5px rgba(0,0,0,0.05)',
-      borderLeft: '4px solid #6B8E23'
+      borderLeft: '4px solid #6B8E23',
+      cursor: 'pointer',
+      transition: 'all 0.3s'
+    },
+    reservaCardHover: {
+      transform: 'translateY(-2px)',
+      boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
     },
     reservaTitle: {
       color: '#D94F4F',
@@ -113,6 +173,88 @@ const VerReservas = () => {
     hoyBadge: {
       backgroundColor: '#D94F4F',
       color: 'white'
+    },
+    estadoContainer: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      marginTop: '10px'
+    },
+    estadoPago: {
+      padding: '4px 10px',
+      borderRadius: '12px',
+      fontSize: '12px',
+      fontWeight: 'bold'
+    },
+    pagado: {
+      backgroundColor: '#E6F7E6',
+      color: '#2E7D32'
+    },
+    pendiente: {
+      backgroundColor: '#FFF3E0',
+      color: '#E65100'
+    },
+    estadoReserva: {
+      padding: '4px 10px',
+      borderRadius: '12px',
+      fontSize: '12px',
+      fontWeight: 'bold'
+    },
+    confirmada: {
+      backgroundColor: '#E3F2FD',
+      color: '#1565C0'
+    },
+    cancelada: {
+      backgroundColor: '#FFEBEE',
+      color: '#C62828'
+    },
+    completada: {
+      backgroundColor: '#E8F5E9',
+      color: '#2E7D32'
+    },
+    modalOverlay: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0,0,0,0.5)',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 1000
+    },
+    modalContent: {
+      backgroundColor: 'white',
+      padding: '30px',
+      borderRadius: '10px',
+      maxWidth: '600px',
+      width: '90%',
+      maxHeight: '90vh',
+      overflowY: 'auto'
+    },
+    closeButton: {
+      position: 'absolute',
+      top: '15px',
+      right: '15px',
+      background: 'none',
+      border: 'none',
+      fontSize: '20px',
+      cursor: 'pointer',
+      color: '#666'
+    },
+    modalTitle: {
+      color: '#D94F4F',
+      fontSize: '22px',
+      fontWeight: 'bold',
+      marginBottom: '15px'
+    },
+    modalSection: {
+      marginBottom: '15px'
+    },
+    modalSectionTitle: {
+      fontWeight: 'bold',
+      marginBottom: '5px',
+      color: '#333'
     }
   };
 
@@ -136,6 +278,40 @@ const VerReservas = () => {
     const hoy = new Date();
     const fecha = new Date(fechaStr);
     return hoy.toDateString() === fecha.toDateString();
+  };
+
+  // Verificar si una reserva es pasada
+  const esPasada = (fechaStr) => {
+    const hoy = new Date();
+    const fecha = new Date(fechaStr);
+    return fecha < hoy;
+  };
+
+  // Filtrar reservas según los criterios seleccionados
+  const reservasFiltradas = reservas.filter(reserva => {
+    // Filtro por tipo (activas/pasadas/todas)
+    const cumpleFiltro = 
+      filtro === 'todas' || 
+      (filtro === 'activas' && !esPasada(reserva.fecha)) || 
+      (filtro === 'pasadas' && esPasada(reserva.fecha)) ||
+      (filtro === 'canceladas' && reserva.estadoReserva === 'Cancelada');
+    
+    // Filtro por búsqueda
+    const cumpleBusqueda = 
+      reserva.taller.toLowerCase().includes(busqueda.toLowerCase()) ||
+      reserva.instructor.toLowerCase().includes(busqueda.toLowerCase());
+    
+    return cumpleFiltro && cumpleBusqueda;
+  });
+
+  // Abrir modal con detalles de la reserva
+  const abrirDetalles = (reserva) => {
+    setReservaSeleccionada(reserva);
+  };
+
+  // Cerrar modal
+  const cerrarDetalles = () => {
+    setReservaSeleccionada(null);
   };
 
   return (
@@ -196,26 +372,151 @@ const VerReservas = () => {
       <div style={styles.contentContainer}>
         <h1 style={styles.title}>Mis Reservas</h1>
         
-        {reservas.map(reserva => (
-          <div key={reserva.id} style={styles.reservaCard}>
-            <div style={{ 
-              ...styles.fechaBadge,
-              ...(esHoy(reserva.fecha) && styles.hoyBadge)
-            }}>
-              {esHoy(reserva.fecha) ? 'HOY' : formatFecha(reserva.fecha)}
-            </div>
-            <h3 style={styles.reservaTitle}>{reserva.taller}</h3>
-            <p style={styles.reservaMeta}>
-              <span style={styles.metaIcon}>🕒</span>
-              <strong>Horario:</strong> {reserva.hora}
-            </p>
-            <p style={styles.reservaMeta}>
-              <span style={styles.metaIcon}>👨‍🍳</span>
-              <strong>Instructor:</strong> {reserva.instructor}
-            </p>
+        {/* Filtros y búsqueda */}
+        <div style={styles.filtersContainer}>
+          <input
+            type="text"
+            placeholder="Buscar por taller o instructor..."
+            style={styles.searchInput}
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+          />
+          
+          <div>
+            <button 
+              style={{...styles.filterButton, ...(filtro === 'todas' && styles.activeFilter)}}
+              onClick={() => setFiltro('todas')}
+            >
+              Todas
+            </button>
+            <button 
+              style={{...styles.filterButton, ...(filtro === 'activas' && styles.activeFilter)}}
+              onClick={() => setFiltro('activas')}
+            >
+              Activas
+            </button>
+            <button 
+              style={{...styles.filterButton, ...(filtro === 'pasadas' && styles.activeFilter)}}
+              onClick={() => setFiltro('pasadas')}
+            >
+              Pasadas
+            </button>
+            <button 
+              style={{...styles.filterButton, ...(filtro === 'canceladas' && styles.activeFilter)}}
+              onClick={() => setFiltro('canceladas')}
+            >
+              Canceladas
+            </button>
           </div>
-        ))}
+        </div>
+        
+        {/* Listado de reservas */}
+        {reservasFiltradas.length > 0 ? (
+          reservasFiltradas.map(reserva => (
+            <div 
+              key={reserva.id} 
+              style={styles.reservaCard}
+              onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+              onMouseLeave={(e) => e.currentTarget.style.transform = 'none'}
+              onClick={() => abrirDetalles(reserva)}
+            >
+              <div style={{ 
+                ...styles.fechaBadge,
+                ...(esHoy(reserva.fecha) && styles.hoyBadge)
+              }}>
+                {esHoy(reserva.fecha) ? 'HOY' : formatFecha(reserva.fecha)}
+              </div>
+              <h3 style={styles.reservaTitle}>{reserva.taller}</h3>
+              <p style={styles.reservaMeta}>
+                <span style={styles.metaIcon}>🕒</span>
+                <strong>Horario:</strong> {reserva.hora}
+              </p>
+              <p style={styles.reservaMeta}>
+                <span style={styles.metaIcon}>👨‍🍳</span>
+                <strong>Instructor:</strong> {reserva.instructor}
+              </p>
+              
+              <div style={styles.estadoContainer}>
+                <span style={{
+                  ...styles.estadoPago,
+                  ...(reserva.estadoPago === 'Pagado' ? styles.pagado : styles.pendiente)
+                }}>
+                  {reserva.estadoPago}
+                </span>
+                <span style={{
+                  ...styles.estadoReserva,
+                  ...(reserva.estadoReserva === 'Confirmada' ? styles.confirmada : 
+                       reserva.estadoReserva === 'Cancelada' ? styles.cancelada : 
+                       styles.completada)
+                }}>
+                  {reserva.estadoReserva}
+                </span>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p>No se encontraron reservas que coincidan con los criterios de búsqueda.</p>
+        )}
       </div>
+
+      {/* Modal de detalles de reserva */}
+      {reservaSeleccionada && (
+        <div style={styles.modalOverlay} onClick={cerrarDetalles}>
+          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <button style={styles.closeButton} onClick={cerrarDetalles}>×</button>
+            
+            <h2 style={styles.modalTitle}>{reservaSeleccionada.taller}</h2>
+            
+            <div style={styles.modalSection}>
+              <div style={styles.modalSectionTitle}>Fecha y Hora</div>
+              <div>{formatFecha(reservaSeleccionada.fecha)} - {reservaSeleccionada.hora}</div>
+            </div>
+            
+            <div style={styles.modalSection}>
+              <div style={styles.modalSectionTitle}>Instructor</div>
+              <div>{reservaSeleccionada.instructor}</div>
+            </div>
+            
+            <div style={styles.modalSection}>
+              <div style={styles.modalSectionTitle}>Ubicación</div>
+              <div>{reservaSeleccionada.ubicacion}</div>
+            </div>
+            
+            <div style={styles.modalSection}>
+              <div style={styles.modalSectionTitle}>Descripción</div>
+              <div>{reservaSeleccionada.descripcion}</div>
+            </div>
+            
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+              <div>
+                <div style={styles.modalSectionTitle}>Estado del Pago</div>
+                <span style={{
+                  ...styles.estadoPago,
+                  ...(reservaSeleccionada.estadoPago === 'Pagado' ? styles.pagado : styles.pendiente),
+                  padding: '6px 12px',
+                  fontSize: '14px'
+                }}>
+                  {reservaSeleccionada.estadoPago}
+                </span>
+              </div>
+              
+              <div>
+                <div style={styles.modalSectionTitle}>Estado de la Reserva</div>
+                <span style={{
+                  ...styles.estadoReserva,
+                  ...(reservaSeleccionada.estadoReserva === 'Confirmada' ? styles.confirmada : 
+                       reservaSeleccionada.estadoReserva === 'Cancelada' ? styles.cancelada : 
+                       styles.completada),
+                  padding: '6px 12px',
+                  fontSize: '14px'
+                }}>
+                  {reservaSeleccionada.estadoReserva}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
