@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; // Importar Axios
 
 // Componente Factura que se mostrará después del pago exitoso
 const Factura = ({ taller, datosPago, numeroFactura, fecha }) => {
@@ -245,36 +246,34 @@ const Pago = ({ taller = {}, onPagoConfirmado, onVolver }) => {
     setNumeroFactura(`FAC-${año}${mes}${dia}-${randomNum}`);
   };
 
-  const handleConfirmarPago = () => {
+  const handleConfirmarPago = async () => {
     // Validación básica
     if (!datosPago.numeroTarjeta || !datosPago.nombreTitular || 
         !datosPago.fechaExpiracion || !datosPago.cvv) {
       alert('Por favor complete todos los campos de pago');
       return;
     }
-
     setProcesando(true);
     
-    // Simulación de procesamiento de pago
-    setTimeout(() => {
-      setPagoExitoso(true);
+    try {
+      const response = await axios.post('http://localhost:5000/realizar-pago', {
+        id_reserva: taller.id_reserva, // Asegúrate de que `taller` tenga `id_reserva`
+        metodo_pago: 'Tarjeta de Crédito/Débito' // Puedes cambiar esto según sea necesario
+      });
+      if (response.status === 200) {
+        setPagoExitoso(true);
+        generarNumeroFactura();
+        // Redirigir después de mostrar el mensaje de éxito
+        setTimeout(() => {
+          if (onPagoConfirmado) onPagoConfirmado();
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('Error al realizar el pago:', error);
+      alert('Error al procesar el pago. Intente nuevamente.');
+    } finally {
       setProcesando(false);
-      generarNumeroFactura();
-
-      // Redirigir después de mostrar el mensaje de éxito
-      setTimeout(() => {
-        if (onPagoConfirmado) onPagoConfirmado();
-      }, 2000);
-    }, 1500);
-  };
-
-  const handleVerFactura = () => {
-    setMostrarFactura(true);
-  };
-
-  const handleVolverDeFactura = () => {
-    setMostrarFactura(false);
-    navigate('/verreservas');
+    }
   };
 
   // Estilos actualizados con la paleta de colores
