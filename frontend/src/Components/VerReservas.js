@@ -9,8 +9,7 @@ const VerReservas = () => {
   const [busqueda, setBusqueda] = useState('');
   const [reservaSeleccionada, setReservaSeleccionada] = useState(null);
 
-  // Reemplaza con tu URL real del backend
-  const BASE_URL = 'http://localhost:5000';
+  const AUTH_API_URL = process.env.REACT_APP_RESERVAS_API || 'http://localhost:5003';
 
   // Obtener el id_usuario desde localStorage
   const user = JSON.parse(localStorage.getItem('user'));
@@ -22,7 +21,7 @@ const VerReservas = () => {
       return;
     }
 
-    axios.get(`${BASE_URL}/reservas/${id_usuario}`)
+    axios.get(`${AUTH_API_URL}/reservas/${id_usuario}`)
       .then(response => {
         const datos = response.data.reservas.map(r => ({
           id: r.id_reserva,
@@ -41,9 +40,6 @@ const VerReservas = () => {
         console.error("Error al obtener reservas", error);
       });
   }, [id_usuario, navigate]);
-
-
-  };
   // Estilos con la paleta de colores
   const styles = {
     mainContainer: {
@@ -508,6 +504,6 @@ const VerReservas = () => {
       )}
     </div>
   );
-;
+};
 
 export default VerReservas;

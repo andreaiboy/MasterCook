@@ -104,7 +104,7 @@ INSERT INTO CATEGORIAS (nombre) VALUES
 
 -- Insertar cursos
 INSERT INTO CURSOS (nombre, id_categoria, fecha, precio, cupo, imagen_url, descripcion, instructor, duracion_horas) VALUES
-  ('Repostería básica', 1, '2025-06-10', 250.00, 20, '/images/cursos/REPBAS.jpg', 'Curso para principiantes en repostería', 'Chef Sofía', 3),
+  ('Repostería básica', 1, '2025-06-10', 250.00, 20, '/images/cursos/RESBAS.jpg', 'Curso para principiantes en repostería', 'Chef Sofía', 3),
   ('Pan artesanal', 2, '2025-06-17', 300.00, 15, '/images/cursos/PANART.jpg', 'Elaboración de pan artesanal en casa', 'Chef Mateo', 4),
   ('Cocina italiana', 3, '2025-07-05', 400.00, 10, '/images/cursos/ITA.jpg', 'Pastas y salsas desde cero', 'Chef Giulia', 5),
   ('Pastelería avanzada', 1, '2025-07-12', 450.00, 8, '/images/cursos/PASTADV.jpg', 'Técnicas profesionales de pastelería', 'Chef Pierre', 6),

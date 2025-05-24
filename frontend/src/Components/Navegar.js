@@ -13,7 +13,7 @@ const Navegar = () => {
 
   useEffect(() => {
     // URL del backend (puedes usar variable de entorno si quieres)
-    const NAVEGAR_API_URL = process.env.REACT_APP_NAVEGAR_API || "http://localhost:5004";
+    const NAVEGAR_API_URL = process.env.REACT_APP_NAVEGAR_API || "http://localhost:5006";
 
     fetch(`${NAVEGAR_API_URL}/api/cursos`)
       .then((res) => res.json())
