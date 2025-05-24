@@ -1,6 +1,6 @@
 # Utiliza como base la imagen oficial de Python versión 3.10
 FROM python:3.10-alpine
-WORKDIR /app 
-COPY . /app
+WORKDIR /Busqueda
+COPY . /Busqueda
 RUN pip install --no-cache-dir -r requirements.txt 
-CMD ["python", "app.py"]
+CMD ["python", "Busqueda.py"]
