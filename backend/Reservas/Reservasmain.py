@@ -14,68 +14,6 @@ def get_db_connection():
         database="mastercook_db"
     )
 
-@app.route("/register", methods=["POST"])
-def register():
-    data = request.get_json()
-    nombre = data.get("nombre")
-    usuario = data.get("usuario")
-    correo = data.get("email")
-    contrasena = data.get("password")
-
-    if not all([nombre, usuario, correo, contrasena]):
-        return jsonify({"message": "Todos los campos son obligatorios"}), 400
-
-    try:
-        db = get_db_connection()
-        cursor = db.cursor()
-
-        cursor.execute("SELECT id_usuario FROM USUARIO WHERE nombre_usuario = %s OR correo = %s", (usuario, correo))
-        if cursor.fetchone():
-            return jsonify({"message": "Usuario o correo ya registrados"}), 409
-
-        cursor.execute(
-            "INSERT INTO USUARIO (nombre, nombre_usuario, correo, contrasena) VALUES (%s, %s, %s, %s)",
-            (nombre, usuario, correo, contrasena)
-        )
-        db.commit()
-
-        cursor.close()
-        db.close()
-        return jsonify({"message": "Registro exitoso"}), 201
-
-    except Exception as e:
-        print(f"Error en registro: {e}")
-        return jsonify({"message": "Error interno del servidor"}), 500
-
-@app.route("/login", methods=["POST"])
-def login():
-    data = request.get_json()
-    usuario = data.get("usuario")
-    contrasena = data.get("password")
-
-    if not all([usuario, contrasena]):
-        return jsonify({"message": "Campos incompletos"}), 400
-
-    try:
-        db = get_db_connection()
-        cursor = db.cursor(dictionary=True)
-        cursor.execute(
-            "SELECT id_usuario, nombre, nombre_usuario FROM USUARIO WHERE nombre_usuario = %s AND contrasena = %s",
-            (usuario, contrasena)
-        )
-        user = cursor.fetchone()
-
-        cursor.close()
-        db.close()
-
-        if user:
-            return jsonify({"message": "Login exitoso", "user": user}), 200
-        else:
-            return jsonify({"message": "Credenciales incorrectas"}), 401
-
-    except Exception as e:
-        print(f"Error en login: {e}")
-        return jsonify({"message": "Error interno del servidor"}), 500
 
 @app.route("/reservas/<int:id_usuario>", methods=["GET"])
 def obtener_reservas_usuario(id_usuario):
